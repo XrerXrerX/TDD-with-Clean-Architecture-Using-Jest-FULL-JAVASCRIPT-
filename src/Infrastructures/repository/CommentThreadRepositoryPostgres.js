@@ -75,10 +75,10 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
     async deleteComment(params, reqowner) {
         const { threadId, commentId } = params;
 
-        const data_dihapus = '**komentar telah dihapus**';
+        // const data_dihapus = '**komentar telah dihapus**';
         const deletequery = {
-            text: 'UPDATE comments SET is_delete = true ,  content = $3 WHERE threadid = $1 AND id = $2 RETURNING *',
-            values: [threadId, commentId, data_dihapus],
+            text: 'UPDATE comments SET is_delete = true WHERE threadid = $1 AND id = $2 RETURNING *',
+            values: [threadId, commentId],
         };
         const comment = await this._pool.query(deletequery);
         if (comment.rowCount == 0) {
@@ -87,8 +87,11 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rows[0].owner != reqowner.username) {
             throw new AuthorizationError('Delete Comment not Allowed');
         }
+        const deletedComment = comment.rows[0]; // Salin data komentar yang dihapus
+        deletedComment.content = '**komentar telah dihapus**'; // Ubah konten menjadi '**komentar telah dihapus**'
 
-        return comment.rows[0].is_delete;
+
+        return deletedComment.is_delete;
     };
 }
 module.exports = CommentThreadRepositoryPostgres;

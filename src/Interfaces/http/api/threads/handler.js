@@ -44,10 +44,10 @@ class ThreadsHandler {
   }
 
   async postCommentThreadHandler(request, h) {
+
     if (!request.headers.authorization || request.headers.authorization == '') {
       throw new AuthenticationError('Missing authentication');
     }
-    console.log(request.payload);
     const { headers } = request;
     // const headersmock = headers.authorization ? headers.authorization.split(' ')[1] : null;
     const headersmock = headers.authorization.split(' ')[1];

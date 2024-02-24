@@ -27,8 +27,7 @@ exports.up = pgm => {
         is_delete: {
             type: 'VARCHAR(7)',
         },
-    })
-});
+    });
 };
 
 exports.down = pgm => {
