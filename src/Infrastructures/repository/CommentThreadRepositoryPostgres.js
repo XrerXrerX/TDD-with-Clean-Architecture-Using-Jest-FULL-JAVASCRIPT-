@@ -84,10 +84,8 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rowCount == 0) {
             throw new NotFoundError('Comment Not Founnd');
         }
-
         if (comment.rows[0].owner != reqowner.username) {
             throw new AuthorizationError('Delete Comment not Allowed');
-
         }
 
         return comment.rows[0].is_delete;

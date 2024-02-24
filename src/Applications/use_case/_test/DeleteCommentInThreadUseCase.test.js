@@ -46,13 +46,23 @@ describe('DeleteAuthenticationUseCase', () => {
     };
 
     const params = {
-      threadId: 'thread-123456789',
-      commentId: 'comment-123456789',
+      threadId: 'thread-123',
+      commentId: 'comment-123',
+    }
+
+    const reqowner = {
+      username: 'dicoding',
+      id: 'user-123',
     }
     const mockauthenticationTokenManager = new AuthenticationTokenManager();
     const mockcommentThreadRepository = new CommentThreadRepository();
+
+
     mockauthenticationTokenManager.decodePayload = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+      .mockImplementation(() => Promise.resolve({
+        username: 'dicoding',
+        id: 'user-123'
+      }));
     mockcommentThreadRepository.deleteComment = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
@@ -68,6 +78,6 @@ describe('DeleteAuthenticationUseCase', () => {
     expect(mockauthenticationTokenManager.decodePayload)
       .toHaveBeenCalledWith(useCasePayload.authorization);
     expect(mockcommentThreadRepository.deleteComment)
-      .toHaveBeenCalledWith(params);
+      .toHaveBeenCalledWith(params, reqowner);
   });
 });

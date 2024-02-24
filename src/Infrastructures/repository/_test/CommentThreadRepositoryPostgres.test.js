@@ -138,6 +138,11 @@ describe('ThreadRepository', () => {
         threadId: 'thread-123456789',
         commentId: 'comment-123456789',
       }
+
+      const reqowner = {
+        username: 'dicoding',
+        id: 'user-123'
+      }
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
 
       // Action
@@ -145,7 +150,7 @@ describe('ThreadRepository', () => {
 
 
       // Assert
-      const comments = await commentThreadRepositoryPostgres.deleteComment(params);
+      const comments = await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
       expect(comments).toBeTruthy(); // Mengasumsikan bahwa deletedComment tidak null atau undefined
     });
 
