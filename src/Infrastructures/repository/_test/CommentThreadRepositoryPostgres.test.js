@@ -74,24 +74,6 @@ describe('ThreadRepository', () => {
       }));
     });
 
-    describe('authentication for threadRepository', () => {
-      it('should send authentication error when no owner provided', async () => {
-        // Arrange
-        const addComment = {
-          threadid: 'thread-123',
-          content: 'content comment thread',
-          owner: '',
-        };
-        const fakeIdGenerator = () => '123';
-
-        //ketika tidak ada maka kirimkan authentication error 
-        const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, fakeIdGenerator);
-
-        // Action and assertion
-        await expect(commentThreadRepositoryPostgres.commentThread(addComment)).rejects.toThrowError(AuthenticationError);
-      });
-    });
-
   });
 
   describe('findcoment function ', () => {
@@ -122,7 +104,6 @@ describe('ThreadRepository', () => {
       }
 
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123', content: 'content comment thread3' });
-
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-124', content: 'content comment thread2' });
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
       const comment = await commentThreadRepositoryPostgres.getComment(params.threadId);
@@ -151,7 +132,7 @@ describe('ThreadRepository', () => {
 
       // Assert
       const comments = await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
-      expect(comments).toBeTruthy(); // Mengasumsikan bahwa deletedComment tidak null atau undefined
+      expect(comments).toStrictEqual('true');
     });
 
     it('should soft delete comment given not found when comment not found', async () => {

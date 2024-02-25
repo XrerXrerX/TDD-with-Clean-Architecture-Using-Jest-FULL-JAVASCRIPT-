@@ -24,8 +24,8 @@ DomainErrorTranslator._directories = {
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token harus string'),
 
 
-  'THREAD.NO_HAVE_TITLE_IN_ADDTHREAD': new InvariantError('title not found in add thread'),
-  'THREAD.NO_HAVE_BODY_IN_ADDTHREAD': new InvariantError('body not found in add thread'),
+  'THREAD.NO_HAVE_GOOD_PAYLOAD': new InvariantError('bad payload inserted'),
+  'THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('bad payload not meet data type'),
   'ADDEDTHREAD.NOT_HAVE_NEEDED_PROPERTY_ID_ADDEDTHREAD': new InvariantError('title not found in addedthread'),
   'ADDEDTHREAD.NOT_HAVE_NEEDED_PROPERTY_TITLE_ADDEDTHREAD': new AuthenticationError('body not found in addedthread'),
   'ADDEDTHREAD.NOT_HAVE_NEEDED_AUTHNENTICATION_OWNER': new AuthenticationError('Missing authentication'),

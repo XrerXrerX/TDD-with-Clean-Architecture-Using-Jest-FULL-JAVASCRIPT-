@@ -10,36 +10,47 @@ describe('Thread Entity', () => {
     it('should throw an error bad payload when no title inserted', () => {
         //assertions
         const payload = {
-            // id: 'thread-123',
+            body: 'body Thread',
+            owner: 'dicoding',
+        };
+        //actions and assertions
+        expect(() => new AddThread(payload)).toThrowError('THREAD.NO_HAVE_GOOD_PAYLOAD');
+    });
+
+    it('should throw an error bad payload when title is not string ', () => {
+        //assertions
+        const payload = {
+            title: 123,
             body: 'body Thread',
             owner: 'dicoding',
         };
 
         //actions and assertions
-        expect(() => new AddThread(payload)).toThrowError('THREAD.NO_HAVE_TITLE_IN_ADDTHREAD');
-    });
-    it('should throw an error bad payload when no body in payload inserted', () => {
-        //assertions
-        const payload = {
-            // id: 'thread-123',
-            title: 'sample title',
-            owner: 'dicoding',
-        };
-
-        //actions and assertions
-        expect(() => new AddThread(payload)).toThrowError('THREAD.NO_HAVE_BODY_IN_ADDTHREAD');
+        expect(() => new AddThread(payload)).toThrowError('THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
     });
 
-    it('should throw an error bad payload when no have owner for authentication inserted', () => {
+    // it('should throw an error bad payload when owner is not string ', () => {
+    //     //assertions
+    //     const payload = {
+    //         title: 'sample title',
+    //         body: 'body Thread',
+    //         owner: 123,
+    //     };
+
+    //     //actions and assertions
+    //     expect(() => new AddThread(payload)).toThrowError('THREAD.NO_HAVE_OWNER_FOR_AUTHENTICATION_IN_ADDTHREAD');
+    // });
+    it('should throw an error bad payload when title is not string ', () => {
         //assertions
         const payload = {
-            // id: 'thread-123',
             title: 'sample title',
             body: 'body Thread',
         };
+
         //actions and assertions
         expect(() => new AddThread(payload)).toThrowError('THREAD.NO_HAVE_OWNER_FOR_AUTHENTICATION_IN_ADDTHREAD');
     });
+
 
 
     //nilai yang di harapkan dan lolos     

@@ -12,6 +12,7 @@ const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 const AuthenticationError = require('../../../Commons/exceptions/AuthenticationError');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
+const InvariantError = require('../../../Commons/exceptions/InvariantError');
 
 
 describe('ThreadRepository', () => {
@@ -33,7 +34,6 @@ describe('ThreadRepository', () => {
         body: 'body Thread',
         owner: 'user-123',
       });
-
       //menggunakan stub
       const fakeIdGenerator = () => '123'; //stub
 
@@ -69,48 +69,51 @@ describe('ThreadRepository', () => {
         owner: 'dicoding',
       }));
     });
+
   });
 
-  describe('authentication for threadRepository', () => {
-    it('should send authentication error when no owner provided', async () => {
-      // Arrange
-      const addThread = {
-        title: 'sample title',
-        body: 'body Thread',
-        owner: '', // owner tidak diberikan
-      };
-      const fakeIdGenerator = () => '123';
-
-      //ketika tidak ada maka kirimkan authentication error 
-      const threadRepository = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
-
-      // Action and assertion
-      await expect(threadRepository.addThread(addThread)).rejects.toThrowError(AuthenticationError);
-    });
-  });
 
   describe('GET DATA THREAD', () => {
     it('should return data thread successfully', async () => {
       const params = {
         threadId: 'thread-123'
       }
-
-
       // //menggunakan stub
       // const fakeIdGenerator = () => '123'; //stub
-      await ThreadsTableTestHelper.addThread({ id: 'thread-123' });
-
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', created_at: '2024-02-24T15:25:51.326Z' });
       //new object untuk menjlankan denagn segala dependenciesnya 
       const threadRepository = new ThreadRepositoryPostgres(pool, {});
 
       // await threadRepository.addThread(addThread);
       const thread = await threadRepository.getThread(params.threadId);
 
-
       //gunakan usertable dan buatkan class yang inigin di buat untuk pengecekan sesuai
       // Assert
       // const thread = await ThreadsTableTestHelper.findOwner('thread-123');
       expect(thread).toHaveLength(1);
+      expect(thread).toStrictEqual([{
+        id: 'thread-123',
+        title: 'Sample Thread',
+        body: 'Sample Body',
+        owner: 'dicoding',
+        created_at: '2024-02-24T15:25:51.326Z',
+        is_delete: null
+      }]);
+    });
+
+
+    it('should send "Thread not found" error when thread does not exist', async () => {
+      // Arrange
+      const params = {
+        threadId: 'thread-5465456456'
+      }
+      // const fakeIdGenerator = () => '123'; //stub
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123' });
+      //new object untuk menjlankan denagn segala dependenciesnya 
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      // Action and assertion
+      await expect(threadRepository.getThread(params)).rejects.toThrowError(InvariantError);
     });
   });
 });

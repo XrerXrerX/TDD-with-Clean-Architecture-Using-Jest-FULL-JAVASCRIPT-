@@ -13,13 +13,13 @@ class CommentThread {
         if (!content) {
             throw new Error('COMMMENTTHREAD.NOT_CONTAIN_CONTENT_PROPERTY');
         }
-        if (!owner) {
+        if (!owner || typeof owner !== 'string') {
             throw new Error('COMMMENTTHREAD.NOT_CONTAIN_NEEDED_AUTHENTICATION');
         }
 
 
 
-        if (typeof content !== 'string' || typeof owner !== 'string') {
+        if (typeof content !== 'string') {
             throw new Error('COMMENTTHREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
         }
 

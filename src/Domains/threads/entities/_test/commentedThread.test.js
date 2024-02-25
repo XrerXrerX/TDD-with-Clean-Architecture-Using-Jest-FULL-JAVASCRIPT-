@@ -55,7 +55,7 @@ describe('commentedThread', () => {
         const comentPayload = {
             id: 'comment-123',
             content: 'content comment thread',
-            owner: {},
+            owner: 123,
         };
 
         // Action and Assert

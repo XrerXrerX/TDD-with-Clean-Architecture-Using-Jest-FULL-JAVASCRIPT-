@@ -96,8 +96,6 @@ describe('/users endpoint', () => {
                 });
 
                 const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
-
-
                 //Arrange
                 threadPayload = {
                     body: 'body Thread',
@@ -109,13 +107,13 @@ describe('/users endpoint', () => {
                     headers: {
                         authorization: 'Bearer ' + refreshToken,
                     },
-                })
+                });
 
                 // Assert
                 const responseJson = JSON.parse(response.payload);
                 expect(response.statusCode).toEqual(400);
                 expect(responseJson.status).toEqual('fail');
-                expect(responseJson.message).toEqual('title not found in add thread');
+                expect(responseJson.message).toEqual('bad payload inserted');
             }
         });
 
@@ -165,7 +163,7 @@ describe('/users endpoint', () => {
                 const responseJson = JSON.parse(response.payload);
                 expect(response.statusCode).toEqual(400);
                 expect(responseJson.status).toEqual('fail');
-                expect(responseJson.message).toEqual('body not found in add thread');
+                expect(responseJson.message).toEqual('bad payload inserted');
             }
         });
     });
@@ -173,6 +171,8 @@ describe('/users endpoint', () => {
         it('should send authentication error when no have headers in payload', async () => {
             const server = await createServer(container);
 
+            const refreshToken = '';
+            await AuthenticationsTableTestHelper.addToken(refreshToken);
             //Arrange
             threadPayload = {
                 title: 'sample title',

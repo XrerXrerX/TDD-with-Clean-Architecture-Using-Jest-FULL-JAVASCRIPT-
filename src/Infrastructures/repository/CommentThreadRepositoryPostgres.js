@@ -29,14 +29,8 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
     async commentThread(commentThread) {
         const { threadid, content, owner } = commentThread;
         //dari container dan dependecies
-
         const id = `comment-${this._idGenerator()}`;
         const created_at = new Date().toISOString();
-
-        //transslate domclgain error jadikan error 
-        if (!owner || owner == undefined || owner == null || owner == '') {
-            throw new AuthenticationError('ADDEDTHREAD.NOT_HAVE_NEEDED_AUTHNENTICATION_OWNER');
-        }
 
         const query = {
             text: 'INSERT INTO comments (id, threadid, content, owner , created_at) VALUES($1, $2, $3 , $4,$5) RETURNING id, threadid, content , owner',
@@ -87,11 +81,11 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rows[0].owner != reqowner.username) {
             throw new AuthorizationError('Delete Comment not Allowed');
         }
-        const deletedComment = comment.rows[0]; // Salin data komentar yang dihapus
-        deletedComment.content = '**komentar telah dihapus**'; // Ubah konten menjadi '**komentar telah dihapus**'
+        // const deletedComment = comment.rows[0]; // Salin data komentar yang dihapus
+        // deletedComment.content = '**komentar telah dihapus**'; // Ubah konten menjadi '**komentar telah dihapus**'
 
 
-        return deletedComment.is_delete;
+        return comment.rows[0].is_delete;
     };
 }
 module.exports = CommentThreadRepositoryPostgres;

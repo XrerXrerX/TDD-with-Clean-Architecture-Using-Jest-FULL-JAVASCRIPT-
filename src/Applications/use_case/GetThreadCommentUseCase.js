@@ -1,4 +1,3 @@
-const CommentThread = require("../../Domains/threads/entities/commentThread");
 
 class GetCommentThreadUseCase {
     constructor({ commentThreadRepository, threadRepository }) {
@@ -17,9 +16,17 @@ class GetCommentThreadUseCase {
         });
         const getComments = await this._commentThreadRepository.getComment(params.threadId);
         const updatedComments = getComments.map(comment => {
-            const { owner, created_at, threadid, ...commentWithoutOwner } = comment; // Menggunakan destructuring untuk menghapus properti owner
+            const { owner, created_at, content, is_delete, ...commentWithoutOwner } = comment; // Menggunakan destructuring untuk menghapus properti owner
+            let updatedContent = content;
+            // Periksa apakah komentar telah dihapus
+            if (is_delete == true || is_delete == 'true') {
+                updatedContent = '**komentar telah dihapus**';
+            }
+
             return {
                 ...commentWithoutOwner,
+                is_delete,
+                content: updatedContent,
                 username: owner, // Menggunakan nilai owner sebagai username
                 date: created_at
             };

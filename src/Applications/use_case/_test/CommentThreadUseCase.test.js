@@ -12,9 +12,7 @@ describe('commentThreadUseCase', () => {
         const params = {
             threadid: 'thread-123'
         };
-        const authorizationPayload = {
-            authorization: 'mockAccessToken'
-        };
+        const id = 'mockAccessToken';
 
         const mockcommentedThread = new commentedThread({
             id: 'comment-123',
@@ -50,14 +48,14 @@ describe('commentThreadUseCase', () => {
             authenticationTokenManager: mockAuthenticationTokenManager,
         });
 
-        const comentedAdded = await commentThreadUseCase.execute(commentPayload, authorizationPayload, params);
+        const comentedAdded = await commentThreadUseCase.execute(commentPayload, id, params);
         expect(comentedAdded).toStrictEqual(new commentedThread({
             id: 'comment-123',
             content: commentPayload.content,
             owner: 'dicoding',
         }));
 
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(authorizationPayload.authorization);
+        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
         expect(mockCommentThreadRepository.findThread).toBeCalledWith(params.threadid);
         expect(mockCommentThreadRepository.commentThread).toBeCalledWith(new CommentThread({
             threadid: 'thread-123',

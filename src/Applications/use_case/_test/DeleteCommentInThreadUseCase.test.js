@@ -7,8 +7,6 @@ describe('DeleteAuthenticationUseCase', () => {
     // Arrange
     const useCasePayload = {};
 
-
-
     const params = {
       threadId: 'thread-123456789',
       commentId: 'comment-123456789',
@@ -64,7 +62,7 @@ describe('DeleteAuthenticationUseCase', () => {
         id: 'user-123'
       }));
     mockcommentThreadRepository.deleteComment = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+      .mockImplementation(() => Promise.resolve(reqowner));
 
     const deleteCommentInThreadUseCase = new DeleteCommentInThreadUseCase({
       authenticationTokenManager: mockauthenticationTokenManager,

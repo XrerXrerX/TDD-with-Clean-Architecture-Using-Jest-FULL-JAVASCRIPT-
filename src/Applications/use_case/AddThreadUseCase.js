@@ -14,8 +14,12 @@ class AddThreadUseCase {
         this._authenticationTokenManager = authenticationTokenManager;
     }
 
-    async execute(threadPayload, authorizationPayload) {
-        const owner = await this._authenticationTokenManager.decodePayload(authorizationPayload.authorization);
+    async execute(threadPayload, id) {
+        // console.log(id == 'undefined');
+        // if (!id || id == undefined || id == null || id == '') {
+        //     throw new AuthenticationError('ADDEDTHREAD.NOT_HAVE_NEEDED_AUTHNENTICATION_OWNER');
+        // }
+        const owner = await this._authenticationTokenManager.decodePayload(id);
         threadPayload.owner = owner.username;
         const addThread = new AddThread(threadPayload);
         return this._threadRepository.addThread(addThread);

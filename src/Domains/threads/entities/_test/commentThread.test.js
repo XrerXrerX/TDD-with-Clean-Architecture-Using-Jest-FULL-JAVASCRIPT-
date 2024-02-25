@@ -30,7 +30,7 @@ describe('commentThread', () => {
         const payload = {
             threadid: 'thread-123',
             content: 'content comment thread',
-            owner: '',
+            owner: 123,
         };
 
         //action and assert

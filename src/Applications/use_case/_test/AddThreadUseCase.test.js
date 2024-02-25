@@ -25,9 +25,7 @@ describe('AddThreadUseCase', () => {
             body: 'body Thread',
         };
 
-        const authorizationPayload = {
-            authorization: 'mockAccessToken'
-        };
+        const id = 'mockAccessToken';
 
         //mocked setelah proses repository lolos maka akan di test dengan domain added thread
         const mockThreadAdded = new AddedThread({
@@ -35,6 +33,11 @@ describe('AddThreadUseCase', () => {
             title: 'sample title',
             owner: 'dicoding',
         });
+
+        owner = {
+            username: 'dicoding',
+            id: 'user-123',
+        };
 
 
 
@@ -53,10 +56,9 @@ describe('AddThreadUseCase', () => {
 
         //seharusnya ada test domain untuk result decode ini tambahkan
         mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({
-                username: 'dicoding',
-                id: 'user-123',
-            })); // Payload hanya berisi id
+            .mockImplementation(() => Promise.resolve(
+                owner
+            )); // Payload hanya berisi id
 
 
 
@@ -68,9 +70,7 @@ describe('AddThreadUseCase', () => {
 
         //jalankan dan akan menjalankan di usecase serta akan mengirimkan sesuai usecase addthreadusecase 
         // Action
-        const threadAdded = await addThreadUseCase.execute(threadPayload, authorizationPayload);
-
-
+        const threadAdded = await addThreadUseCase.execute(threadPayload, id);
         //nilai yang di harapkan di test dengan domain addedthread
         // Assert
         expect(threadAdded).toStrictEqual(new AddedThread({
@@ -80,13 +80,13 @@ describe('AddThreadUseCase', () => {
         }));
 
         //usecase diharapkan berjalan sesuai dengan usecase proses berjalan
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(authorizationPayload.authorization);
+        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
 
         //ketika ingin di proses di repository nilai yang diharapkan sesuai dengan addthread domain 
         expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread({
             title: threadPayload.title,
             body: threadPayload.body,
-            owner: 'dicoding',
+            owner: owner.username,
         }));
     });
 });
