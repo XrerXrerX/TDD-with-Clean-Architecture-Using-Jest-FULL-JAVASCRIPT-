@@ -83,7 +83,7 @@ describe('ThreadRepository', () => {
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
-      await expect(commentThreadRepositoryPostgres.findThread('thread-1234567')).rejects.toThrowError(NotFoundError);
+      await expect(commentThreadRepositoryPostgres.verifyThreadAvailability('thread-1234567')).rejects.toThrowError(NotFoundError);
     });
     it('should not to throw invariant eror when threadid find', async () => {
       await ThreadsTableTestHelper.addThread({ id: 'thread-123456' });
@@ -91,7 +91,7 @@ describe('ThreadRepository', () => {
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
 
       // Action
-      const threadid = await commentThreadRepositoryPostgres.findThread('thread-123456');
+      const threadid = await commentThreadRepositoryPostgres.verifyThreadAvailability('thread-123456');
       // Assert
       expect(threadid).toEqual({ id: 'thread-123456' });
     });
@@ -103,12 +103,28 @@ describe('ThreadRepository', () => {
         threadId: 'thread-123'
       }
 
-      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123', content: 'content comment thread3' });
-      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-124', content: 'content comment thread2' });
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123', content: 'content comment thread3', created_at: '2024-02-25T13:01:49.242Z', });
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-124', content: 'content comment thread2', created_at: '2024-02-25T13:01:49.242Z', });
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
       const comment = await commentThreadRepositoryPostgres.getComment(params.threadId);
       expect(comment).toHaveLength(2);
-
+      expect(comment).toStrictEqual(
+        [{
+          id: 'comment-123',
+          threadid: 'thread-123',
+          content: 'content comment thread3',
+          owner: 'dicoding',
+          created_at: '2024-02-25T13:01:49.242Z',
+          is_delete: null
+        },
+        {
+          id: 'comment-124',
+          threadid: 'thread-123',
+          content: 'content comment thread2',
+          owner: 'dicoding',
+          created_at: '2024-02-25T13:01:49.242Z',
+          is_delete: null
+        }]);
     });
   });
 
@@ -119,7 +135,6 @@ describe('ThreadRepository', () => {
         threadId: 'thread-123456789',
         commentId: 'comment-123456789',
       }
-
       const reqowner = {
         username: 'dicoding',
         id: 'user-123'
@@ -128,11 +143,11 @@ describe('ThreadRepository', () => {
 
       // Action
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789' });
-
+      await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
+      const comment = await commentThreadRepositoryPostgres.getComment(params.threadId);
 
       // Assert
-      const comments = await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
-      expect(comments).toStrictEqual('true');
+      expect(comment[0].is_delete).toBe('true');
     });
 
     it('should soft delete comment given not found when comment not found', async () => {

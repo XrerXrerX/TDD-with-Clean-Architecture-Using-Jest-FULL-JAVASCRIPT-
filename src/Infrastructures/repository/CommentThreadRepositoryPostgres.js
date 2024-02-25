@@ -44,7 +44,7 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         });
     }
 
-    async findThread(threadId) {
+    async verifyThreadAvailability(threadId) {
         const query = {
             text: 'SELECT id FROM threads WHERE id = $1',
             values: [threadId],

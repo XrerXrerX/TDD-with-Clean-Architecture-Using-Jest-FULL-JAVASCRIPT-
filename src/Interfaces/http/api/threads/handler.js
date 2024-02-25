@@ -11,7 +11,7 @@ const CommentThreadUseCase = require('../../../../Applications/use_case/CommentT
 const GetThreadCommentUseCase = require('../../../../Applications/use_case/GetThreadCommentUseCase');
 const DeleteCommentInThreadUseCase = require('../../../../Applications/use_case/DeleteCommentInThreadUseCase');
 const AuthenticationError = require('../../../../Commons/exceptions/AuthenticationError');
-// const AuthenticationTokenManager = require('../../../../Applications/security/AuthenticationTokenManager');
+const AuthenticationTokenManager = require('../../../../Applications/security/AuthenticationTokenManager');
 
 
 class ThreadsHandler {
@@ -31,9 +31,9 @@ class ThreadsHandler {
     // const headersmock = headers.authorization ? headers.authorization.split(' ')[1] : null;
     const headersmock = headers.authorization.split(' ')[1];
     headers.authorization = headersmock
-    const { authorization: id } = headers;
+    const { authorization: owneruser } = headers;
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
-    const addedThread = await addThreadUseCase.execute(request.payload, id);
+    const addedThread = await addThreadUseCase.execute(request.payload, owneruser);
     const response = h.response({
       status: 'success',
       data: {

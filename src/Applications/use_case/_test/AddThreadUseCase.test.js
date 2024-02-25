@@ -25,7 +25,7 @@ describe('AddThreadUseCase', () => {
             body: 'body Thread',
         };
 
-        const id = 'mockAccessToken';
+        const owneruser = 'mockAccessToken';
 
         //mocked setelah proses repository lolos maka akan di test dengan domain added thread
         const mockThreadAdded = new AddedThread({
@@ -70,7 +70,7 @@ describe('AddThreadUseCase', () => {
 
         //jalankan dan akan menjalankan di usecase serta akan mengirimkan sesuai usecase addthreadusecase 
         // Action
-        const threadAdded = await addThreadUseCase.execute(threadPayload, id);
+        const threadAdded = await addThreadUseCase.execute(threadPayload, owneruser);
         //nilai yang di harapkan di test dengan domain addedthread
         // Assert
         expect(threadAdded).toStrictEqual(new AddedThread({
@@ -80,7 +80,7 @@ describe('AddThreadUseCase', () => {
         }));
 
         //usecase diharapkan berjalan sesuai dengan usecase proses berjalan
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
+        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(owneruser);
 
         //ketika ingin di proses di repository nilai yang diharapkan sesuai dengan addthread domain 
         expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread({

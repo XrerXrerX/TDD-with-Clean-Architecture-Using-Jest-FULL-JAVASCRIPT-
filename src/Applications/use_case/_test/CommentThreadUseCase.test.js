@@ -30,7 +30,7 @@ describe('commentThreadUseCase', () => {
             .mockImplementation(() => Promise.resolve(
                 mockcommentedThread
             ));
-        mockCommentThreadRepository.findThread = jest.fn()
+        mockCommentThreadRepository.verifyThreadAvailability = jest.fn()
             .mockImplementation(() => Promise.resolve({
                 id: 'thread-123',
                 title: 'sample title',
@@ -56,7 +56,7 @@ describe('commentThreadUseCase', () => {
         }));
 
         expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
-        expect(mockCommentThreadRepository.findThread).toBeCalledWith(params.threadid);
+        expect(mockCommentThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
         expect(mockCommentThreadRepository.commentThread).toBeCalledWith(new CommentThread({
             threadid: 'thread-123',
             content: commentPayload.content,

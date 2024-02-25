@@ -13,7 +13,7 @@ class CommentThreadUseCase {
     }
     async _verifyThreadAvailability(params, commentPayload, owner) {
         const { threadid } = params;
-        const findedthreadid = await this._commentThreadRepository.findThread(threadid);
+        const findedthreadid = await this._commentThreadRepository.verifyThreadAvailability(threadid);
         commentPayload.owner = owner.username;
         commentPayload.threadid = findedthreadid.id;
         return commentPayload;
