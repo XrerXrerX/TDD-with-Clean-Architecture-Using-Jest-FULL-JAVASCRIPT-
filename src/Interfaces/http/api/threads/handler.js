@@ -55,8 +55,10 @@ class ThreadsHandler {
     headers.authorization = headersmock
     const { authorization: id } = headers;
 
+
     const commentThreadUseCase = this._container.getInstance(CommentThreadUseCase.name);
     const addedComment = await commentThreadUseCase.execute(request.payload, id, request.params);
+
     const response = h.response({
       status: 'success',
       data: {

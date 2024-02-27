@@ -9,6 +9,11 @@ class ThreadRepository {
         throw new Error('GET_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     }
 
+
+    async verifyThreadAvailability(threadid) {
+        throw new Error('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    }
+
     // async getThreadsByUserId(userId) {
     //     throw new Error('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     // }

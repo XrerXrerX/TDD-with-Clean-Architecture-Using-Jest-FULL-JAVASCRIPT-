@@ -6,7 +6,7 @@
  */
 
 const InvariantError = require('../../Commons/exceptions/InvariantError');
-
+const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AddedThread = require('../../Domains/threads/entities/addedthread');
 const ThreadRepository = require('../../Domains/threads/ThreadRepository');
 // const generateThreadId = require('../../Applications/utils/idGenerator');
@@ -47,6 +47,20 @@ class ThreadRepositoryPostgres extends ThreadRepository {
             ...result.rows[0]
         });
     }
+
+
+    async verifyThreadAvailability(threadId) {
+        const query = {
+            text: 'SELECT id FROM threads WHERE id = $1',
+            values: [threadId],
+        };
+        const result = await this._pool.query(query);
+        if (result.rowCount == 0) {
+            throw new NotFoundError('thread not found');
+        }
+        return result.rows[0];
+    }
+
 
     async getThread(threadId) {
         const threadidquery = {

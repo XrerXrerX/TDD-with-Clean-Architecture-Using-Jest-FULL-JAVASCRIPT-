@@ -13,7 +13,7 @@ describe('ComentThreadRepository', () => {
     });
 
     it('should throw "FIND_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for commentedThread', async () => {
-        await expect(commentThreadRepository.verifyThreadAvailability()).rejects.toThrow('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+        await expect(commentThreadRepository.VerifyDeleteComment()).rejects.toThrow('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     });
 
     it('should throw "GET_COMMENT_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for getThreadsByUserId', async () => {

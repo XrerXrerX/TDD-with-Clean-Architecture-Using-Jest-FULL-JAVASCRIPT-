@@ -44,17 +44,17 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         });
     }
 
-    async verifyThreadAvailability(threadId) {
-        const query = {
-            text: 'SELECT id FROM threads WHERE id = $1',
-            values: [threadId],
-        };
-        const result = await this._pool.query(query);
-        if (result.rowCount == 0) {
-            throw new NotFoundError('thread not found');
-        }
-        return result.rows[0];
-    }
+    // async verifyThreadAvailability(threadId) {
+    //     const query = {
+    //         text: 'SELECT id FROM threads WHERE id = $1',
+    //         values: [threadId],
+    //     };
+    //     const result = await this._pool.query(query);
+    //     if (result.rowCount == 0) {
+    //         throw new NotFoundError('thread not found');
+    //     }
+    //     return result.rows[0];
+    // }
 
     async getComment(threadId) {
         const commentquery = {
@@ -66,7 +66,21 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         return commentdata.rows;
     }
 
-    async deleteComment(params, reqowner) {
+    async VerifyDeleteComment(params, reqowner) {
+        const { commentId } = params
+        const commentquery = {
+            text: 'SELECT * FROM comments WHERE id = $1',
+            values: [commentId],
+        };
+        const commentdata = await this._pool.query(commentquery);
+        console.log(commentdata);
+        if (commentdata.rows[0].owner != reqowner.username) {
+            throw new AuthorizationError('Delete Comment not Allowed');
+        }
+        return;
+    }
+
+    async deleteComment(params) {
         const { threadId, commentId } = params;
 
         // const data_dihapus = '**komentar telah dihapus**';
@@ -78,9 +92,9 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rowCount == 0) {
             throw new NotFoundError('Comment Not Founnd');
         }
-        if (comment.rows[0].owner != reqowner.username) {
-            throw new AuthorizationError('Delete Comment not Allowed');
-        }
+        // if (comment.rows[0].owner != reqowner.username) {
+        //     throw new AuthorizationError('Delete Comment not Allowed');
+        // }
         // const deletedComment = comment.rows[0]; // Salin data komentar yang dihapus
         // deletedComment.content = '**komentar telah dihapus**'; // Ubah konten menjadi '**komentar telah dihapus**'
 

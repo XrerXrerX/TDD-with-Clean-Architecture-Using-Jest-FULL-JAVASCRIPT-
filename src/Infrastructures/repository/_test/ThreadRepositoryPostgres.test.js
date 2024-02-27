@@ -116,6 +116,26 @@ describe('ThreadRepository', () => {
       await expect(threadRepository.getThread(params)).rejects.toThrowError(InvariantError);
     });
   });
+  describe('findcoment function ', () => {
+    it('should throw invariant errpr when threadid not available', async () => {
+      await ThreadsTableTestHelper.addThread({ id: 'thread-12345' });
+
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      await expect(threadRepository.verifyThreadAvailability('thread-1234567')).rejects.toThrowError(NotFoundError);
+    });
+    it('should not to throw invariant eror when threadid find', async () => {
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123456' });
+
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      // Action
+      const threadid = await threadRepository.verifyThreadAvailability('thread-123456');
+      // Assert
+      expect(threadid).toEqual({ id: 'thread-123456' });
+    });
+  })
 });
 
 

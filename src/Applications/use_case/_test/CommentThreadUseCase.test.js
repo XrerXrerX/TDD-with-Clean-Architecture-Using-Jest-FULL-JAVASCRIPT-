@@ -3,6 +3,8 @@ const commentedThread = require('../../../Domains/threads/entities/commentedThre
 const CommentThreadUseCase = require('../CommentThreadUseCase');
 const CommentThreadRepository = require('../../../Domains/threads/CommentThreadRepository');
 const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
+
 
 describe('commentThreadUseCase', () => {
     it('should add comment successfully', async () => {
@@ -24,13 +26,14 @@ describe('commentThreadUseCase', () => {
         /** creating dependency of use case */
         const mockCommentThreadRepository = new CommentThreadRepository();
         const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        const mockThreadRepository = new ThreadRepository();
 
         /** mocking needed function */
         mockCommentThreadRepository.commentThread = jest.fn()
             .mockImplementation(() => Promise.resolve(
                 mockcommentedThread
             ));
-        mockCommentThreadRepository.verifyThreadAvailability = jest.fn()
+        mockThreadRepository.verifyThreadAvailability = jest.fn()
             .mockImplementation(() => Promise.resolve({
                 id: 'thread-123',
                 title: 'sample title',
@@ -46,6 +49,7 @@ describe('commentThreadUseCase', () => {
         const commentThreadUseCase = new CommentThreadUseCase({
             commentThreadRepository: mockCommentThreadRepository,
             authenticationTokenManager: mockAuthenticationTokenManager,
+            threadRepository: mockThreadRepository,
         });
 
         const comentedAdded = await commentThreadUseCase.execute(commentPayload, id, params);
@@ -56,7 +60,7 @@ describe('commentThreadUseCase', () => {
         }));
 
         expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
-        expect(mockCommentThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
+        expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
         expect(mockCommentThreadRepository.commentThread).toBeCalledWith(new CommentThread({
             threadid: 'thread-123',
             content: commentPayload.content,

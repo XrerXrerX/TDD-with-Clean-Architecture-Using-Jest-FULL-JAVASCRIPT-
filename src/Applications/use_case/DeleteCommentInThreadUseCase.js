@@ -1,8 +1,7 @@
 class DeleteCommentInThreadUseCase {
-    constructor({ commentThreadRepository, authenticationTokenManager, authenticationRepository }) {
+    constructor({ commentThreadRepository, authenticationTokenManager }) {
         this._commentThreadRepository = commentThreadRepository;
         this._authenticationTokenManager = authenticationTokenManager;
-        this._authenticationRepository = authenticationRepository;
     }
     async execute(params, useCasePayload) {
         this._validatePayload(useCasePayload);
@@ -10,8 +9,9 @@ class DeleteCommentInThreadUseCase {
         const headersmock = useCasePayload.authorization.split(' ')[1];
         useCasePayload.authorization = headersmock
         const reqowner = await this._authenticationTokenManager.decodePayload(useCasePayload.authorization);
+        await this._commentThreadRepository.deleteComment(params);
+        await this._commentThreadRepository.VerifyDeleteComment(params, reqowner);
 
-        await this._commentThreadRepository.deleteComment(params, reqowner);
     };
 
     _validatePayload(payload) {

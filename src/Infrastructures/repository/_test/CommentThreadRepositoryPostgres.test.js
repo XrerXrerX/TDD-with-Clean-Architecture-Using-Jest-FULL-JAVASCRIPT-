@@ -76,26 +76,7 @@ describe('ThreadRepository', () => {
 
   });
 
-  describe('findcoment function ', () => {
-    it('should throw invariant errpr when threadid not available', async () => {
-      await ThreadsTableTestHelper.addThread({ id: 'thread-12345' });
 
-      const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
-
-      // Action & Assert
-      await expect(commentThreadRepositoryPostgres.verifyThreadAvailability('thread-1234567')).rejects.toThrowError(NotFoundError);
-    });
-    it('should not to throw invariant eror when threadid find', async () => {
-      await ThreadsTableTestHelper.addThread({ id: 'thread-123456' });
-
-      const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool, {});
-
-      // Action
-      const threadid = await commentThreadRepositoryPostgres.verifyThreadAvailability('thread-123456');
-      // Assert
-      expect(threadid).toEqual({ id: 'thread-123456' });
-    });
-  })
 
   describe('GET DATA COMMENT', () => {
     it('should send data comment', async () => {

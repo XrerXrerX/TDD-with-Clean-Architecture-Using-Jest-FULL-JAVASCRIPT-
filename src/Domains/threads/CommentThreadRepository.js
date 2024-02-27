@@ -5,7 +5,7 @@ class CommentThreadRepository {
         throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     }
 
-    async verifyThreadAvailability(threadid) {
+    async VerifyDeleteComment(commendid) {
         throw new Error('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     }
 

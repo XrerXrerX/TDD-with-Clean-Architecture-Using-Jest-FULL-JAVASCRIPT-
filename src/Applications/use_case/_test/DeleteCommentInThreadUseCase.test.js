@@ -63,6 +63,8 @@ describe('DeleteAuthenticationUseCase', () => {
       }));
     mockcommentThreadRepository.deleteComment = jest.fn()
       .mockImplementation(() => Promise.resolve(reqowner));
+    mockcommentThreadRepository.VerifyDeleteComment = jest.fn()
+      .mockImplementation(() => Promise.resolve());
 
     const deleteCommentInThreadUseCase = new DeleteCommentInThreadUseCase({
       authenticationTokenManager: mockauthenticationTokenManager,
@@ -75,7 +77,9 @@ describe('DeleteAuthenticationUseCase', () => {
     // Assert
     expect(mockauthenticationTokenManager.decodePayload)
       .toHaveBeenCalledWith(useCasePayload.authorization);
-    expect(mockcommentThreadRepository.deleteComment)
+    expect(mockcommentThreadRepository.VerifyDeleteComment)
       .toHaveBeenCalledWith(params, reqowner);
+    expect(mockcommentThreadRepository.deleteComment)
+      .toHaveBeenCalledWith(params);
   });
 });

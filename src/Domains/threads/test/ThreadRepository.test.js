@@ -16,6 +16,10 @@ describe('ThreadRepository', () => {
         await expect(threadRepository.getThread()).rejects.toThrow('GET_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     });
 
+    it('should throw "FIND_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for commentedThread', async () => {
+        await expect(threadRepository.verifyThreadAvailability()).rejects.toThrow('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    });
+
     // it('should throw "THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for getThreadsByUserId', async () => {
     //     await expect(threadRepository.getThreadsByUserId()).rejects.toThrow('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     // });
