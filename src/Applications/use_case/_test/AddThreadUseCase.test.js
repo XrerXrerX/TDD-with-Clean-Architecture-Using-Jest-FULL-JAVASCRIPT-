@@ -13,7 +13,7 @@ const AddThread = require('../../../Domains/threads/entities/addthread');
 const AddedThread = require('../../../Domains/threads/entities/addedthread');
 const AddThreadUseCase = require('../AddThreadUseCase');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
+// const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
 
 describe('AddThreadUseCase', () => {
     it('should add a thread successfully', async () => {
@@ -25,7 +25,7 @@ describe('AddThreadUseCase', () => {
             body: 'body Thread',
         };
 
-        const owneruser = 'mockAccessToken';
+        const owneruser = 'dicoding';
 
         //mocked setelah proses repository lolos maka akan di test dengan domain added thread
         const mockThreadAdded = new AddedThread({
@@ -34,17 +34,13 @@ describe('AddThreadUseCase', () => {
             owner: 'dicoding',
         });
 
-        owner = {
-            username: 'dicoding',
-            id: 'user-123',
-        };
-
+        owner = 'dicoding';
 
 
         //membuat dependency untuk usecase yang akan di gunakan function apa yang akan digunakan dan mock apa yang digunakan 
         /** creating dependency of use case */
         const mockThreadRepository = new ThreadRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        // const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
 
         //gunakan mock dependencies dengan payload sesuai dengan ouput usecases yang ada 
@@ -55,17 +51,17 @@ describe('AddThreadUseCase', () => {
             ));
 
         //seharusnya ada test domain untuk result decode ini tambahkan
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve(
-                owner
-            )); // Payload hanya berisi id
+        // mockAuthenticationTokenManager.decodePayload = jest.fn()
+        //     .mockImplementation(() => Promise.resolve(
+        //         owner
+        //     )); // Payload hanya berisi id
 
 
 
         //kita gunakan usecase yang ada untuk dipakai di usecase sesuai kebutuhan contohnya addthreadusecase
         const addThreadUseCase = new AddThreadUseCase({
             threadRepository: mockThreadRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
+            // authenticationTokenManager: mockAuthenticationTokenManager,
         });
 
         //jalankan dan akan menjalankan di usecase serta akan mengirimkan sesuai usecase addthreadusecase 
@@ -80,13 +76,13 @@ describe('AddThreadUseCase', () => {
         }));
 
         //usecase diharapkan berjalan sesuai dengan usecase proses berjalan
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(owneruser);
+        // expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(owneruser);
 
         //ketika ingin di proses di repository nilai yang diharapkan sesuai dengan addthread domain 
         expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread({
             title: threadPayload.title,
             body: threadPayload.body,
-            owner: owner.username,
+            owner: owner,
         }));
     });
 });

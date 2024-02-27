@@ -33,6 +33,7 @@ const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase');
 const CommentThreadUseCase = require('../Applications/use_case/CommentThreadUseCase');
 const GetThreadCommentUseCase = require('../Applications/use_case/GetThreadCommentUseCase');
 const DeleteCommentInThreadUseCase = require('../Applications/use_case/DeleteCommentInThreadUseCase');
+const VerifyUserAuth = require('../Applications/use_case/VerifyUserAuthUseCase');
 
 
 
@@ -267,6 +268,23 @@ container.register([
         {
           name: 'authenticationRepository',
           internal: AuthenticationRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: VerifyUserAuth.name,
+    Class: VerifyUserAuth,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'authenticationRepository',
+          internal: AuthenticationRepository.name,
+        },
+        {
+          name: 'authenticationTokenManager',
+          internal: AuthenticationTokenManager.name,
         },
       ],
     },

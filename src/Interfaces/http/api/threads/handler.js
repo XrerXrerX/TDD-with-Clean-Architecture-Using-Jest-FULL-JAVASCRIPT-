@@ -9,7 +9,7 @@
 const AddThreadUseCase = require('../../../../Applications/use_case/AddThreadUseCase');
 // const RefreshAuthenticationUseCase = require('../../../../Applications/use_case/RefreshAuthenticationUseCase');
 const AuthenticationError = require('../../../../Commons/exceptions/AuthenticationError');
-const JwtTokenManager = require('../../../../Infrastructures/security/JwtTokenManager');
+const VerifyUserAuthUseCase = require('../../../../Applications/use_case/VerifyUserAuthUseCase');
 
 
 class ThreadsHandler {
@@ -28,8 +28,10 @@ class ThreadsHandler {
     const headersmock = headers.authorization.split(' ')[1];
     headers.authorization = headersmock
     const { authorization: owneruser } = headers;
+    const verifyowner = this._container.getInstance(VerifyUserAuthUseCase.name);
+    const owner = await verifyowner.execute(owneruser);
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
-    const addedThread = await addThreadUseCase.execute(request.payload, owneruser);
+    const addedThread = await addThreadUseCase.execute(request.payload, owner);
 
     const response = h.response({
       status: 'success',

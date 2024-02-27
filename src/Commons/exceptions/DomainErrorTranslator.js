@@ -43,6 +43,8 @@ DomainErrorTranslator._directories = {
   'DELETE_AUTHENTICATION_USE_CASE.PROHIBITED': new AuthorizationError('Delete Comment not Allowed'),
 
   'DELETE_AUTHENTICATION_USE_CASE.NOT_HAVE_AUTHENTICATION': new AuthenticationError('Missing authentication'),
+  'REFRESH_VERIFY_OWNER_USE_CASE': new AuthenticationError('Missing authentication'),
+  'REFRESH_VERIFY_OWNER_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new AuthenticationError('forbidden for input different data type'),
 };
 
 module.exports = DomainErrorTranslator;

@@ -14,10 +14,10 @@ class AddThreadUseCase {
         this._authenticationTokenManager = authenticationTokenManager;
     }
 
-    async execute(threadPayload, owneruser) {
+    async execute(threadPayload, owner) {
 
-        const owner = await this._authenticationTokenManager.decodePayload(owneruser);
-        threadPayload.owner = owner.username;
+        threadPayload.owner = owner;
+        console.log(threadPayload);
         const addThread = new AddThread(threadPayload);
         return this._threadRepository.addThread(addThread);
     }
