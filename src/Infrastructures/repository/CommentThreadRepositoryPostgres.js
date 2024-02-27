@@ -73,7 +73,6 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
             values: [commentId],
         };
         const commentdata = await this._pool.query(commentquery);
-        console.log(commentdata);
         if (commentdata.rows[0].owner != reqowner.username) {
             throw new AuthorizationError('Delete Comment not Allowed');
         }
