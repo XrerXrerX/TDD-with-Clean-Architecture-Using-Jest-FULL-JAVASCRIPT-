@@ -73,10 +73,11 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
             values: [commentId],
         };
         const commentdata = await this._pool.query(commentquery);
-        if (commentdata.rows[0].owner != reqowner.username) {
+        if (commentdata.rows[0].owner != reqowner) {
             throw new AuthorizationError('Delete Comment not Allowed');
         }
-        return;
+
+        return commentdata.rows[0];
     }
 
     async deleteComment(params) {
@@ -91,14 +92,8 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rowCount == 0) {
             throw new NotFoundError('Comment Not Founnd');
         }
-        // if (comment.rows[0].owner != reqowner.username) {
-        //     throw new AuthorizationError('Delete Comment not Allowed');
-        // }
-        // const deletedComment = comment.rows[0]; // Salin data komentar yang dihapus
-        // deletedComment.content = '**komentar telah dihapus**'; // Ubah konten menjadi '**komentar telah dihapus**'
 
-
-        return comment.rows[0].is_delete;
+        return comment.rows[0];
     };
 }
 module.exports = CommentThreadRepositoryPostgres;

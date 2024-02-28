@@ -143,7 +143,7 @@ describe('/thread/threadid/comments', () => {
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual('fail');
-            expect(responseJson.message).toEqual('thread not found');
+            expect(responseJson.message).toEqual('Thread not found');
         });
 
         it('should send 403 when invalid comment owner ', async () => {
@@ -263,8 +263,6 @@ describe('/thread/threadid/comments', () => {
     describe('DELETE COMMENT /threads/{threadId}/comments/{commentId}', () => {
         it('should can soft delete commens', async () => {
             const server = await createServer(container);
-
-
             await server.inject({
                 method: 'POST',
                 url: '/users',

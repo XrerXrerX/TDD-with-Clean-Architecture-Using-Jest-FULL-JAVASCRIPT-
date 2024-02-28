@@ -19,10 +19,9 @@ describe('ThreadRepository', () => {
     it('should throw "FIND_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for commentedThread', async () => {
         await expect(threadRepository.verifyThreadAvailability()).rejects.toThrow('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     });
-
-    // it('should throw "THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for getThreadsByUserId', async () => {
-    //     await expect(threadRepository.getThreadsByUserId()).rejects.toThrow('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
-    // });
+    it('should throw "CHECK_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for commentedThread', async () => {
+        await expect(threadRepository.CheckThread()).rejects.toThrow('FINDTHREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    });
 
     // it('should throw "THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for deleteThread', async () => {
     //     await expect(threadRepository.deleteThread()).rejects.toThrow('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');

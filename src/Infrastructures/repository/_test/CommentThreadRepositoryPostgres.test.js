@@ -123,12 +123,21 @@ describe('ThreadRepository', () => {
       }
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
       // Action
-      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789' });
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789', created_at: '2024-02-25T13:01:49.242Z' });
       await commentThreadRepositoryPostgres.getComment(params.threadId);
       const comment = await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
       // Assert
-      expect(comment).toStrictEqual('true');
-
+      expect(comment.is_delete).toStrictEqual('true');
+      expect(comment).toStrictEqual(
+        {
+          id: 'comment-123456789',
+          threadid: 'thread-123456789',
+          content: 'content comment thread',
+          owner: 'dicoding',
+          created_at: '2024-02-25T13:01:49.242Z',
+          is_delete: 'true'
+        }
+      );
     });
 
 
@@ -150,10 +159,8 @@ describe('ThreadRepository', () => {
         threadId: 'thread-123456789',
         commentId: 'comment-123456789',
       }
-      const reqowner = {
-        username: 'dicoding',
-        id: 'user-123'
-      }
+      const reqowner = 'dicoding';
+
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
       // Action
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789', owner: 'dicoding' });

@@ -31,12 +31,14 @@ describe('commentThreadUseCase', () => {
             .mockImplementation(() => Promise.resolve(
                 mockcommentedThread
             ));
-        mockThreadRepository.verifyThreadAvailability = jest.fn()
-            .mockImplementation(() => Promise.resolve({
-                id: 'thread-123',
-                title: 'sample title',
-                owner: 'dicoding',
-            }));
+        mockThreadRepository.CheckThread = jest.fn()
+            .mockImplementation(() => Promise.resolve());
+        // mockThreadRepository.verifyThreadAvailability = jest.fn()
+        //     .mockImplementation(() => Promise.resolve({
+        //         id: 'thread-123',
+        //         title: 'sample title',
+        //         owner: 'dicoding',
+        //     }));
 
 
 
@@ -52,7 +54,8 @@ describe('commentThreadUseCase', () => {
             owner: 'dicoding',
         }));
 
-        expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
+        // expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
+        expect(mockThreadRepository.CheckThread).toBeCalledWith(params.threadid);
         expect(mockCommentThreadRepository.commentThread).toBeCalledWith(new CommentThread({
             threadid: 'thread-123',
             content: commentPayload.content,

@@ -1,9 +1,8 @@
 const CommentThread = require("../../Domains/threads/entities/commentThread");
 
 class CommentThreadUseCase {
-    constructor({ commentThreadRepository, authenticationTokenManager, threadRepository }) {
+    constructor({ commentThreadRepository, threadRepository }) {
         this._commentThreadRepository = commentThreadRepository;
-        this._authenticationTokenManager = authenticationTokenManager;
         this._threadRepository = threadRepository;
     }
     async execute(commentPayload, owneruser, params) {
@@ -13,7 +12,7 @@ class CommentThreadUseCase {
     }
     async _verifyThreadAvailability(params, commentPayload, owneruser) {
         const { threadid } = params;
-        await this._threadRepository.verifyThreadAvailability(threadid);
+        await this._threadRepository.CheckThread(threadid);
         commentPayload.owner = owneruser;
         commentPayload.threadid = threadid;
         return commentPayload;

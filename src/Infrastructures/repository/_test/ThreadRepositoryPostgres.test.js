@@ -136,7 +136,20 @@ describe('ThreadRepository', () => {
       expect(threadid).toEqual({ id: 'thread-123456' });
     });
   })
+
+  describe('check thread available without return anything', () => {
+    it('should send "Thread not found" error when thread does not exist', async () => {
+      // Arrange
+      const params = {
+        threadId: 'thread-5465456456'
+      }
+      // const fakeIdGenerator = () => '123'; //stub
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123' });
+      //new object untuk menjlankan denagn segala dependenciesnya 
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      // Action and assertion
+      await expect(threadRepository.CheckThread(params)).rejects.toThrowError(NotFoundError);
+    });
+  });
 });
-
-
-
