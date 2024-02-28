@@ -12,6 +12,7 @@ const CommentThreadRepositoryPostgres = require('../CommentThreadRepositoryPostg
 const AuthenticationRepositoryPostgres = require('../AuthenticationRepositoryPostgres');
 
 const AuthenticationError = require('../../../Commons/exceptions/AuthenticationError');
+const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const CommentThreadsTableTestHelper = require('../../../../tests/CommentThreadsTableTestHelper');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
@@ -121,15 +122,15 @@ describe('ThreadRepository', () => {
         id: 'user-123'
       }
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
-
       // Action
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789' });
-      await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
-      const comment = await commentThreadRepositoryPostgres.getComment(params.threadId);
-
+      await commentThreadRepositoryPostgres.getComment(params.threadId);
+      const comment = await commentThreadRepositoryPostgres.deleteComment(params, reqowner);
       // Assert
-      expect(comment[0].is_delete).toBe('true');
+      expect(comment).toStrictEqual('true');
+
     });
+
 
     it('should soft delete comment given not found when comment not found', async () => {
 
@@ -140,6 +141,42 @@ describe('ThreadRepository', () => {
       // Action & Assert
       await expect(commentThreadRepositoryPostgres.deleteComment('thread-12345677')).rejects.toThrowError(NotFoundError);
     });
+  });
+
+  describe('VERIFY DELETE COMMENT', () => {
+    it('should verify delete soft delete with authentication ', async () => {
+      // Arrange
+      const params = {
+        threadId: 'thread-123456789',
+        commentId: 'comment-123456789',
+      }
+      const reqowner = {
+        username: 'dicoding',
+        id: 'user-123'
+      }
+      const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
+      // Action
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789', owner: 'dicoding' });
+      await commentThreadRepositoryPostgres.VerifyDeleteComment(params, reqowner);
+    });
+
+    it('should verify delete soft delete with authentication send authorization error', async () => {
+      // Arrange
+      const params = {
+        threadId: 'thread-123456789',
+        commentId: 'comment-1233456789',
+      }
+      const reqowner = {
+        username: 'johndoe',
+        id: 'user-123'
+      }
+      const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
+      // Action
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-1233456789', threadid: 'thread-123456789', owner: 'dicoding' });
+      await expect(commentThreadRepositoryPostgres.VerifyDeleteComment(params, reqowner)).rejects.toThrowError(AuthorizationError);
+    });
+
+
   });
 
 });

@@ -42,6 +42,7 @@ const container = createContainer();
 
 // registering services and repository
 container.register([
+
   {
     key: UserRepository.name,
     Class: UserRepositoryPostgres,
@@ -203,10 +204,6 @@ container.register([
         {
           name: 'threadRepository', // Use the same name for consistency
           internal: ThreadRepository.name,
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name,
         }
       ],
     },
@@ -221,10 +218,6 @@ container.register([
         {
           name: 'commentThreadRepository', // Use the same name for consistency
           internal: CommentThreadRepository.name,
-        },
-        {
-          name: 'authenticationTokenManager',
-          internal: AuthenticationTokenManager.name,
         },
         {
           name: 'threadRepository', // Use the same name for consistency

@@ -4,6 +4,9 @@ const routes = (handler) => ([
     method: 'POST',
     path: '/threads/{threadid}/comments',
     handler: handler.postCommentThreadHandler,
+    options: {
+      auth: 'jwtowner',
+    },
   },
   {
     method: 'GET',
@@ -15,6 +18,9 @@ const routes = (handler) => ([
     method: 'DELETE',
     path: '/threads/{threadId}/comments/{commentId}',
     handler: handler.deleteCommentHandler,
+    options: {
+      auth: 'jwtowner',
+    },
   },
 
 ]);

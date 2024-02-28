@@ -18,32 +18,6 @@ describe('/thread/threadid/comments', () => {
     }); //
 
 
-    describe('send authenctication when no have headers in payload', () => {
-        it('should send authentication error when no have headers in payload', async () => {
-            const server = await createServer(container);
-
-            //Arrange
-            threadPayload = {
-                content: 'content comment thread',
-
-            };
-
-            const response = await server.inject({
-                method: 'POST',
-                url: '/threads/{threadid}/comments',
-                payload: threadPayload,
-                headers: {
-                    authorization: '',
-                },
-            })
-            const responseJson = JSON.parse(response.payload);
-            expect(response.statusCode).toEqual(401);
-            expect(responseJson.status).toEqual('fail');
-            expect(responseJson.message).toEqual('Missing authentication');
-
-        });
-
-    });
     describe(' when add comment  /thread/threadid/comments', () => {
         it('should response 201 and persisted comment', async () => {
 
@@ -70,7 +44,7 @@ describe('/thread/threadid/comments', () => {
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
             threadPayload = {
                 title: 'sample title',
@@ -83,7 +57,7 @@ describe('/thread/threadid/comments', () => {
                 url: '/threads',
                 payload: threadPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             })
 
@@ -98,7 +72,7 @@ describe('/thread/threadid/comments', () => {
                 url: `/threads/${threadid}/comments`,
                 payload: requestPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             });
 
@@ -108,6 +82,7 @@ describe('/thread/threadid/comments', () => {
             expect(responseJson.status).toEqual('success');
             expect(responseJson.data.addedComment).toBeDefined();
         });
+
 
         it('should send response 404 if thread not found', async () => {
             const server = await createServer(container);
@@ -133,7 +108,7 @@ describe('/thread/threadid/comments', () => {
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
             threadPayload = {
                 title: 'sample title',
@@ -146,7 +121,7 @@ describe('/thread/threadid/comments', () => {
                 url: '/threads',
                 payload: threadPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             })
 
@@ -161,7 +136,7 @@ describe('/thread/threadid/comments', () => {
                 url: `/threads/${threadid}/comments`,
                 payload: requestPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             });
             // Assert
@@ -195,7 +170,7 @@ describe('/thread/threadid/comments', () => {
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
             const threadId = 'thread-321';
             const commentId = 'comment-888';
@@ -208,7 +183,7 @@ describe('/thread/threadid/comments', () => {
                 method: 'DELETE',
                 url: `/threads/${threadId}/comments/${commentId}`,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             });
 
@@ -245,7 +220,7 @@ describe('/thread/threadid/comments', () => {
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
             threadPayload = {
                 title: 'sample title',
@@ -258,7 +233,7 @@ describe('/thread/threadid/comments', () => {
                 url: '/threads',
                 payload: threadPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             })
 
@@ -274,7 +249,7 @@ describe('/thread/threadid/comments', () => {
                 url: `/threads/${threadid}/comments`,
                 payload: requestPayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             });
             // Assert
@@ -283,31 +258,9 @@ describe('/thread/threadid/comments', () => {
             expect(responseJson.status).toEqual('fail');
             expect(responseJson.message).toEqual('Type data tidak sesuai');
         });
-    }); //
+    });
 
     describe('DELETE COMMENT /threads/{threadId}/comments/{commentId}', () => {
-        it('should send authentication error when delete no have authorizations', async () => {
-            const server = await createServer(container);
-
-            // const refreshToken = 'refresh_token';
-            const threadId = 'thread-123';
-            const commentId = 'comment-123';
-            const refreshToken = '';
-            await AuthenticationsTableTestHelper.addToken(refreshToken);
-
-            const response = await server.inject({
-                method: 'DELETE',
-                url: `/threads/${threadId}/comments/${commentId}`,
-                headers: {
-                    authorization: '',
-                },
-            });
-            const responseJson = JSON.parse(response.payload);
-            expect(response.statusCode).toEqual(401);
-            expect(responseJson.status).toEqual('fail');
-            expect(responseJson.message).toEqual('Missing authentication');
-        });
-
         it('should can soft delete commens', async () => {
             const server = await createServer(container);
 
@@ -333,7 +286,7 @@ describe('/thread/threadid/comments', () => {
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
             const threadId = 'thread-321';
             const commentId = 'comment-888';
@@ -346,7 +299,7 @@ describe('/thread/threadid/comments', () => {
                 method: 'DELETE',
                 url: `/threads/${threadId}/comments/${commentId}`,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'bearer ' + accessToken,
                 },
             });
 

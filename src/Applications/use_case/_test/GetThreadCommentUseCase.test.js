@@ -12,19 +12,23 @@ describe('GetcommentThreadUseCase', () => {
             threadId: 'thread-123'
         };
 
-        const mockDataThreadComment = new GetThread({
-            id: 'thread-123',
-            title: 'sebuah thread',
-            body: 'sebuah body thread',
-            owner: 'user-123',
-            created_at: '2021-08-08T07:19:09.775Z'
-        });
+        // const mockDataThreadComment = new GetThread({
+        //     id: 'thread-123',
+        //     title: 'sebuah thread',
+        //     body: 'sebuah body thread',
+        //     owner: 'user-123',
+        //     created_at: '2021-08-08T07:19:09.775Z'
+        // });
 
         // Perbarui mockDataThreadComment menjadi sebuah array yang berisi objek dengan properti comments
         const mockDataThreadCommentWithComments = [
             {
-                ...mockDataThreadComment,
-                comments: [] // Atau Anda dapat menambahkan komentar di sini jika perlu
+                id: 'thread-123',
+                title: 'sebuah thread',
+                body: 'sebuah body thread',
+                owner: 'user-123',
+                is_delete: null,
+                created_at: '2021-08-08T07:19:09.775Z',
             }
         ];
         const mockDataComment = (
@@ -54,6 +58,7 @@ describe('GetcommentThreadUseCase', () => {
             title: 'sebuah thread',
             body: 'sebuah body thread',
             date: "2021-08-08T07:19:09.775Z",
+            is_delete: null,
             username: 'user-123',
             comments: ([{
                 id: "comment-123",
@@ -86,8 +91,6 @@ describe('GetcommentThreadUseCase', () => {
             .mockImplementation(() => Promise.resolve(
                 mockDataComment
             ));
-
-
 
 
         const getThreadCommenUsecase = new GetThreadCommentUseCase({

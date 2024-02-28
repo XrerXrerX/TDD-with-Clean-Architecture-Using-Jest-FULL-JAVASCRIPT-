@@ -2,7 +2,6 @@ const CommentThread = require('../../../Domains/threads/entities/commentThread')
 const commentedThread = require('../../../Domains/threads/entities/commentedThread');
 const CommentThreadUseCase = require('../CommentThreadUseCase');
 const CommentThreadRepository = require('../../../Domains/threads/CommentThreadRepository');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 
 
@@ -14,7 +13,7 @@ describe('commentThreadUseCase', () => {
         const params = {
             threadid: 'thread-123'
         };
-        const id = 'mockAccessToken';
+        const owneruser = 'dicoding';
 
         const mockcommentedThread = new commentedThread({
             id: 'comment-123',
@@ -25,7 +24,6 @@ describe('commentThreadUseCase', () => {
 
         /** creating dependency of use case */
         const mockCommentThreadRepository = new CommentThreadRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
         const mockThreadRepository = new ThreadRepository();
 
         /** mocking needed function */
@@ -39,27 +37,21 @@ describe('commentThreadUseCase', () => {
                 title: 'sample title',
                 owner: 'dicoding',
             }));
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({
-                username: 'dicoding',
-                id: 'user-123',
-            })); // Payload hanya berisi id
+
 
 
         const commentThreadUseCase = new CommentThreadUseCase({
             commentThreadRepository: mockCommentThreadRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
             threadRepository: mockThreadRepository,
         });
 
-        const comentedAdded = await commentThreadUseCase.execute(commentPayload, id, params);
+        const comentedAdded = await commentThreadUseCase.execute(commentPayload, owneruser, params);
         expect(comentedAdded).toStrictEqual(new commentedThread({
             id: 'comment-123',
             content: commentPayload.content,
             owner: 'dicoding',
         }));
 
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(id);
         expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(params.threadid);
         expect(mockCommentThreadRepository.commentThread).toBeCalledWith(new CommentThread({
             threadid: 'thread-123',

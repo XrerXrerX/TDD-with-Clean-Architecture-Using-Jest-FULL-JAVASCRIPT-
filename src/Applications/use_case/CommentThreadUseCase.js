@@ -6,17 +6,16 @@ class CommentThreadUseCase {
         this._authenticationTokenManager = authenticationTokenManager;
         this._threadRepository = threadRepository;
     }
-    async execute(commentPayload, id, params) {
-        const owner = await this._authenticationTokenManager.decodePayload(id);
-        const updateCommentPayload = await this._verifyThreadAvailability(params, commentPayload, owner)
+    async execute(commentPayload, owneruser, params) {
+        const updateCommentPayload = await this._verifyThreadAvailability(params, commentPayload, owneruser)
         const commentThread = new CommentThread(updateCommentPayload);
         return this._commentThreadRepository.commentThread(commentThread);
     }
-    async _verifyThreadAvailability(params, commentPayload, owner) {
+    async _verifyThreadAvailability(params, commentPayload, owneruser) {
         const { threadid } = params;
-        const findedthreadid = await this._threadRepository.verifyThreadAvailability(threadid);
-        commentPayload.owner = owner.username;
-        commentPayload.threadid = findedthreadid.id;
+        await this._threadRepository.verifyThreadAvailability(threadid);
+        commentPayload.owner = owneruser;
+        commentPayload.threadid = threadid;
         return commentPayload;
 
     }

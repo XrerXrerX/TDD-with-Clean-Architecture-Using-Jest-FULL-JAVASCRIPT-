@@ -22,19 +22,9 @@ class commentHandler {
 
 
   async postCommentThreadHandler(request, h) {
-
-    if (!request.headers.authorization || request.headers.authorization == '') {
-      throw new AuthenticationError('Missing authentication');
-    }
-    const { headers } = request;
-    // const headersmock = headers.authorization ? headers.authorization.split(' ')[1] : null;
-    const headersmock = headers.authorization.split(' ')[1];
-    headers.authorization = headersmock
-    const { authorization: id } = headers;
-
-
+    const { id: owneruser } = request.auth.credentials;
     const commentThreadUseCase = this._container.getInstance(CommentThreadUseCase.name);
-    const addedComment = await commentThreadUseCase.execute(request.payload, id, request.params);
+    const addedComment = await commentThreadUseCase.execute(request.payload, owneruser, request.params);
 
     const response = h.response({
       status: 'success',

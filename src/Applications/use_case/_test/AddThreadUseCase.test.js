@@ -34,7 +34,6 @@ describe('AddThreadUseCase', () => {
             owner: 'dicoding',
         });
 
-        owner = 'dicoding';
 
 
         //membuat dependency untuk usecase yang akan di gunakan function apa yang akan digunakan dan mock apa yang digunakan 
@@ -82,7 +81,7 @@ describe('AddThreadUseCase', () => {
         expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread({
             title: threadPayload.title,
             body: threadPayload.body,
-            owner: owner,
+            owner: owneruser,
         }));
     });
 });

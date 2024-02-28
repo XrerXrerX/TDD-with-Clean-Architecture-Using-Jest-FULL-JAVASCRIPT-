@@ -1,16 +1,45 @@
 const Hapi = require('@hapi/hapi');
+const Jwt = require('@hapi/jwt');
+
 const ClientError = require('../../Commons/exceptions/ClientError');
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const users = require('../../Interfaces/http/api/users');
 const threads = require('../../Interfaces/http/api/threads');
 const comments = require('../../Interfaces/http/api/comments');
 const authentications = require('../../Interfaces/http/api/authentications');
+const AuthenticationTokenManager = require('../security/JwtTokenManager');
+
 
 const createServer = async (container) => {
+
   const server = Hapi.server({
     host: process.env.HOST,
     port: process.env.PORT,
   });
+
+
+  await server.register([
+    {
+      plugin: Jwt,
+    }
+  ]);
+
+  server.auth.strategy('jwtowner', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.username,
+      },
+    }),
+  });
+
 
   await server.register([
     {
@@ -29,7 +58,9 @@ const createServer = async (container) => {
       plugin: comments,
       options: { container },
     },
+
   ]);
+
 
   server.ext('onPreResponse', (request, h) => {
     // mendapatkan konteks response dari request

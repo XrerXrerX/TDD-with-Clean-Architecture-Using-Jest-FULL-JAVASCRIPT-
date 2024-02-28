@@ -13,7 +13,6 @@ class DeleteCommentInThreadUseCase {
         await this._commentThreadRepository.VerifyDeleteComment(params, reqowner);
 
     };
-
     _validatePayload(payload) {
         const { authorization } = payload;
         if (!authorization || authorization === undefined || authorization === null) {

@@ -9,6 +9,9 @@ describe('HTTP server', () => {
     const response = await server.inject({
       method: 'GET',
       url: '/unregisteredRoute',
+      headers: {
+        Authorization: 'Bearer invalid_token', // Gunakan token yang tidak valid
+      },
     });
 
     // Assert
@@ -29,6 +32,9 @@ describe('HTTP server', () => {
       method: 'POST',
       url: '/users',
       payload: requestPayload,
+      headers: {
+        Authorization: 'Bearer validToken', // Gunakan token yang tidak valid
+      },
     });
 
     // Assert

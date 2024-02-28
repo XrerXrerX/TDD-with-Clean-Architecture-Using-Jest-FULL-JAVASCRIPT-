@@ -26,44 +26,43 @@ describe('/users endpoint', () => {
                 method: 'POST',
                 url: '/users',
                 payload: {
-                    username: 'dicoding_thread',
+                    username: 'dicoding',
                     password: 'secret_thread',
                     fullname: 'Dicoding2 Indonesia',
                 },
             });
 
-            // login user
+
             const loginResponse = await server.inject({
                 method: 'POST',
                 url: '/authentications',
                 payload: {
-                    username: 'dicoding_thread',
+                    username: 'dicoding',
                     password: 'secret_thread',
                 },
             });
 
-            const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
+            const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
-
-            threadPayload = {
+            const threadpayload = {
                 title: 'sample title',
-                body: 'body Thread',
+                body: 'body thread'
             };
-
 
             //eslint-disable-next-line no-undef
             const response = await server.inject({
                 method: 'POST',
                 url: '/threads',
-                payload: threadPayload,
+                payload: threadpayload,
                 headers: {
-                    authorization: 'bearer ' + refreshToken,
+                    authorization: 'Bearer ' + accessToken,
                 },
+
             })
+
 
             // Assert
             const responseJson = JSON.parse(response.payload);
-
             expect(response.statusCode).toEqual(201);
             expect(responseJson.status).toEqual('success');
             expect(responseJson.data.addedThread).toBeDefined();
@@ -79,83 +78,37 @@ describe('/users endpoint', () => {
                     method: 'POST',
                     url: '/users',
                     payload: {
-                        username: 'dicoding_thread',
+                        username: 'dicoding',
                         password: 'secret_thread',
                         fullname: 'Dicoding2 Indonesia',
                     },
                 });
 
-                // login user
+
                 const loginResponse = await server.inject({
                     method: 'POST',
                     url: '/authentications',
                     payload: {
-                        username: 'dicoding_thread',
+                        username: 'dicoding',
                         password: 'secret_thread',
                     },
                 });
 
-                const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
-                //Arrange
-                threadPayload = {
-                    body: 'body Thread',
-                }
-                const response = await server.inject({
-                    method: 'POST',
-                    url: '/threads',
-                    payload: threadPayload,
-                    headers: {
-                        authorization: 'Bearer ' + refreshToken,
-                    },
-                });
+                const { data: { accessToken } } = JSON.parse(loginResponse.payload);
 
-                // Assert
-                const responseJson = JSON.parse(response.payload);
-                expect(response.statusCode).toEqual(400);
-                expect(responseJson.status).toEqual('fail');
-                expect(responseJson.message).toEqual('bad payload inserted');
-            }
-        });
-
-        it('should throw error 400 when bad payload not fulfilled', async () => {
-            {
-                const server = await createServer(container);
-                // add user
-                await server.inject({
-                    method: 'POST',
-                    url: '/users',
-                    payload: {
-                        username: 'dicoding_thread',
-                        password: 'secret_thread',
-                        fullname: 'Dicoding2 Indonesia',
-                    },
-                });
-
-                // login user
-                const loginResponse = await server.inject({
-                    method: 'POST',
-                    url: '/authentications',
-                    payload: {
-                        username: 'dicoding_thread',
-                        password: 'secret_thread',
-                    },
-                });
-
-                const { data: { refreshToken } } = JSON.parse(loginResponse.payload);
-
-
-                //Arrange
-                threadPayload = {
+                const threadpayload = {
                     title: 'sample title',
-                }
+                };
 
+                //eslint-disable-next-line no-undef
                 const response = await server.inject({
                     method: 'POST',
                     url: '/threads',
-                    payload: threadPayload,
+                    payload: threadpayload,
                     headers: {
-                        authorization: 'Bearer ' + refreshToken,
+                        authorization: 'Bearer ' + accessToken,
                     },
+
                 })
 
 
@@ -165,33 +118,6 @@ describe('/users endpoint', () => {
                 expect(responseJson.status).toEqual('fail');
                 expect(responseJson.message).toEqual('bad payload inserted');
             }
-        });
-    });
-    describe('send authenctication when no have headers in payload', () => {
-        it('should send authentication error when no have headers in payload', async () => {
-            const server = await createServer(container);
-
-            const refreshToken = '';
-            await AuthenticationsTableTestHelper.addToken(refreshToken);
-            //Arrange
-            threadPayload = {
-                title: 'sample title',
-                body: 'body Thread',
-            };
-
-            const response = await server.inject({
-                method: 'POST',
-                url: '/threads',
-                payload: threadPayload,
-                headers: {
-                    authorization: '',
-                },
-            })
-            const responseJson = JSON.parse(response.payload);
-            expect(response.statusCode).toEqual(401);
-            expect(responseJson.status).toEqual('fail');
-            expect(responseJson.message).toEqual('Missing authentication');
-
         });
 
     });

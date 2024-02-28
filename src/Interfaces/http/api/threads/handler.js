@@ -11,6 +11,7 @@ const AddThreadUseCase = require('../../../../Applications/use_case/AddThreadUse
 const AuthenticationError = require('../../../../Commons/exceptions/AuthenticationError');
 const VerifyUserAuthUseCase = require('../../../../Applications/use_case/VerifyUserAuthUseCase');
 
+const AuthenticationTokenManager = require('../../../../Infrastructures/security/JwtTokenManager');
 
 class ThreadsHandler {
   constructor(container) {
@@ -20,18 +21,11 @@ class ThreadsHandler {
 
   async postThreadHandler(request, h) {
 
+    const { id: owneruser } = request.auth.credentials;
 
-    if (!request.headers.authorization || request.headers.authorization == '') {
-      throw new AuthenticationError('Missing authentication');
-    }
-    const { headers } = request;
-    const headersmock = headers.authorization.split(' ')[1];
-    headers.authorization = headersmock
-    const { authorization: owneruser } = headers;
-    const verifyowner = this._container.getInstance(VerifyUserAuthUseCase.name);
-    const owner = await verifyowner.execute(owneruser);
+
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
-    const addedThread = await addThreadUseCase.execute(request.payload, owner);
+    const addedThread = await addThreadUseCase.execute(request.payload, owneruser);
 
     const response = h.response({
       status: 'success',
