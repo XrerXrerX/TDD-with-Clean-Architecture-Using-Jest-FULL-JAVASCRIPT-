@@ -164,7 +164,11 @@ describe('ThreadRepository', () => {
       const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
       // Action
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123456789', threadid: 'thread-123456789', owner: 'dicoding' });
-      await commentThreadRepositoryPostgres.VerifyDeleteComment(params, reqowner);
+      const found = await commentThreadRepositoryPostgres.CheckComment(params.commentId);
+
+      const veryfy = await commentThreadRepositoryPostgres.VerifyDeleteComment(params, reqowner);
+      expect(veryfy).toStrictEqual('comment allowed for delete');
+      expect(found).toStrictEqual('comment found');
     });
 
     it('should verify delete soft delete with authentication send authorization error', async () => {
@@ -182,6 +186,18 @@ describe('ThreadRepository', () => {
       await CommentThreadsTableTestHelper.commentThread({ id: 'comment-1233456789', threadid: 'thread-123456789', owner: 'dicoding' });
       await expect(commentThreadRepositoryPostgres.VerifyDeleteComment(params, reqowner)).rejects.toThrowError(AuthorizationError);
     });
+
+    it('should verify delete soft delete with authentication send authorization error', async () => {
+      // Arrange
+
+      const commentId = 'comment-1233456789';
+
+      const commentThreadRepositoryPostgres = new CommentThreadRepositoryPostgres(pool);
+      // Action
+      await CommentThreadsTableTestHelper.commentThread({ id: 'comment-123345678954', threadid: 'thread-123456789', owner: 'dicoding' });
+      await expect(commentThreadRepositoryPostgres.CheckComment(commentId)).rejects.toThrowError(NotFoundError);
+    });
+
 
 
   });

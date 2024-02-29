@@ -44,18 +44,6 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         });
     }
 
-    // async verifyThreadAvailability(threadId) {
-    //     const query = {
-    //         text: 'SELECT id FROM threads WHERE id = $1',
-    //         values: [threadId],
-    //     };
-    //     const result = await this._pool.query(query);
-    //     if (result.rowCount == 0) {
-    //         throw new NotFoundError('thread not found');
-    //     }
-    //     return result.rows[0];
-    // }
-
     async getComment(threadId) {
         const commentquery = {
             text: 'SELECT * FROM comments WHERE threadid = $1',
@@ -67,6 +55,7 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
     }
 
     async VerifyDeleteComment(params, reqowner) {
+
         const { commentId } = params
         const commentquery = {
             text: 'SELECT * FROM comments WHERE id = $1',
@@ -77,7 +66,20 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
             throw new AuthorizationError('Delete Comment not Allowed');
         }
 
-        return commentdata.rows[0];
+        return 'comment allowed for delete';
+    }
+
+    async CheckComment(commentId) {
+        const threadidquery = {
+            text: 'SELECT * FROM comments WHERE id = $1',
+            values: [commentId],
+        };
+        const threaddata = await this._pool.query(threadidquery);
+
+        if (threaddata.rowCount == 0) {
+            throw new NotFoundError('Comment Not Founnd');
+        }
+        return 'comment found';
     }
 
     async deleteComment(params) {
@@ -92,7 +94,6 @@ class CommentThreadRepositoryPostgres extends ComentThreadRepository {
         if (comment.rowCount == 0) {
             throw new NotFoundError('Comment Not Founnd');
         }
-
         return comment.rows[0];
     };
 }

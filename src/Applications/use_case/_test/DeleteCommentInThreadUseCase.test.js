@@ -29,9 +29,13 @@ describe('DeleteAuthenticationUseCase', () => {
     }
     const mockcommentThreadRepository = new CommentThreadRepository();
 
-    mockcommentThreadRepository.deleteComment = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+
     mockcommentThreadRepository.VerifyDeleteComment = jest.fn()
+      .mockImplementation(() => Promise.resolve());
+    mockcommentThreadRepository.CheckComment = jest.fn()
+      .mockImplementation(() => Promise.resolve());
+
+    mockcommentThreadRepository.deleteComment = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
     const deleteCommentInThreadUseCase = new DeleteCommentInThreadUseCase({
@@ -44,6 +48,9 @@ describe('DeleteAuthenticationUseCase', () => {
     // Assert
     expect(mockcommentThreadRepository.VerifyDeleteComment)
       .toHaveBeenCalledWith(params, owneruser);
+    expect(mockcommentThreadRepository.CheckComment)
+      .toHaveBeenCalledWith(params.commentId);
+
     expect(mockcommentThreadRepository.deleteComment)
       .toHaveBeenCalledWith(params);
   });

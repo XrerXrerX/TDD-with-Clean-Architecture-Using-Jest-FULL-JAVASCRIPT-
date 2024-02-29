@@ -23,4 +23,7 @@ describe('ComentThreadRepository', () => {
     it('should throw "THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for deleteThread', async () => {
         await expect(commentThreadRepository.deleteComment()).rejects.toThrow('DELETE_COMMENT_IN_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     });
+    it('should throw "THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED" for deleteThread', async () => {
+        await expect(commentThreadRepository.CheckComment()).rejects.toThrow('DELETE_COMMENT_IN_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    });
 });

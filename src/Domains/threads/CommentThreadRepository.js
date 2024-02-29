@@ -16,6 +16,9 @@ class CommentThreadRepository {
     async deleteComment(params) {
         throw new Error('DELETE_COMMENT_IN_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     }
+    async CheckComment(params) {
+        throw new Error('DELETE_COMMENT_IN_THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    }
 }
 
 module.exports = CommentThreadRepository;
