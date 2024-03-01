@@ -20,7 +20,7 @@ jobs:
         script: |
           git config --global --add safe.directory ~/TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
           cd ~/TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
-          git pull origin main
+          git pull origin main --force
           npm install
           npm run migrate up
           pm2 restart sepak_terjang
