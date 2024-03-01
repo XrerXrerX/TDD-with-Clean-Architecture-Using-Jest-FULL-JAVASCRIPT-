@@ -18,7 +18,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          sudo su
           git config --global --add safe.directory ~/TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
           cd ~/TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
           git pull origin main
