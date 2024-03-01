@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 const { Pool } = require('pg');
+// require('dotenv').config();
 
 const testConfig = {
   host: process.env.PGHOST_TEST,
