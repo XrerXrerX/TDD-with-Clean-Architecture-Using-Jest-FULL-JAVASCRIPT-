@@ -18,6 +18,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+          sudo su
           cd ~/TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
           git pull origin main
           npm install
