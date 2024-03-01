@@ -22,4 +22,4 @@ jobs:
           git pull origin main
           npm install
           npm run migrate up
-          pm2 restart TDD-with-Clean-Architecture-Using-Jest-FULL-JAVASCRIPT-
+          pm2 restart sepak_terjang
